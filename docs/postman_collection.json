@@ -1,0 +1,454 @@
+{
+	"info": {
+		"name": "WTG Spain API",
+		"description": "API for supplier offer imports, property availability search, and reservations. Converted from the generated OpenAPI spec (see /api/documentation).\n\nPrerequisites:\n- A supplier with code \"supplier-a\" must already exist (there is no API endpoint to create suppliers; run `php artisan db:seed --class=SupplierSeeder` against the target environment first).\n- Imports are processed asynchronously by ProcessImportJob. For the \"Full Flow\" folder to reach a `completed` import status and find the imported offer in a property search, either set `QUEUE_CONNECTION=sync` or run `php artisan queue:work` against the target environment before/while running the flow.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{ "key": "base_url", "value": "http://localhost", "type": "string" },
+		{ "key": "import_id", "value": "", "type": "string" },
+		{ "key": "external_import_id", "value": "", "type": "string" },
+		{ "key": "property_code", "value": "", "type": "string" },
+		{ "key": "property_city", "value": "PostmanFlowCity", "type": "string" },
+		{ "key": "offer_external_id", "value": "", "type": "string" },
+		{ "key": "offer_id", "value": "", "type": "string" },
+		{ "key": "client_reference", "value": "", "type": "string" },
+		{ "key": "client_reference_2", "value": "", "type": "string" }
+	],
+	"item": [
+		{
+			"name": "Imports",
+			"description": "Standalone example requests for the imports endpoints. See \"Full Flow\" for a scenario with guaranteed, order-dependent test assertions.",
+			"item": [
+				{
+					"name": "Create Import",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 202', function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test('Response has id and status', function () {",
+									"    pm.expect(json).to.have.property('id');",
+									"    pm.expect(json).to.have.property('status');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supplier\": \"supplier-a\",\n    \"external_import_id\": \"example-batch-001\",\n    \"sent_at\": \"2026-09-06T10:00:00Z\",\n    \"offers\": [\n        {\n            \"external_id\": \"example-off-1\",\n            \"property\": {\n                \"code\": \"EXAMPLE-PROP-1\",\n                \"name\": \"Sunset Hotel\",\n                \"city\": \"Barcelona\"\n            },\n            \"check_in\": \"2026-10-01\",\n            \"check_out\": \"2026-10-05\",\n            \"max_guests\": 4,\n            \"price\": 199.99,\n            \"currency\": \"EUR\",\n            \"available_units\": 3,\n            \"expires_at\": \"2026-12-01T00:00:00Z\"\n        }\n    ]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{base_url}}/api/imports",
+							"host": ["{{base_url}}"],
+							"path": ["api", "imports"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Import Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 200 or 404', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{base_url}}/api/imports/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "imports", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Properties",
+			"description": "Standalone example request for the property search endpoint.",
+			"item": [
+				{
+					"name": "Search Properties",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test('Response has a data array and pagination links/meta', function () {",
+									"    pm.expect(json).to.have.property('data').that.is.an('array');",
+									"    pm.expect(json).to.have.property('links');",
+									"    pm.expect(json).to.have.property('meta');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{base_url}}/api/properties?check_in=2026-10-01&check_out=2026-10-05&guests=2",
+							"host": ["{{base_url}}"],
+							"path": ["api", "properties"],
+							"query": [
+								{ "key": "check_in", "value": "2026-10-01" },
+								{ "key": "check_out", "value": "2026-10-05" },
+								{ "key": "guests", "value": "2" }
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservations",
+			"description": "Standalone example request for the reservation endpoint.",
+			"item": [
+				{
+					"name": "Create Reservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 201, 404, 409, or 422', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 404, 409, 422]);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_reference\": \"example-res-001\",\n    \"customer_name\": \"Jane Doe\",\n    \"customer_email\": \"jane@example.com\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{base_url}}/api/offers/1/reservations",
+							"host": ["{{base_url}}"],
+							"path": ["api", "offers", "1", "reservations"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Full Flow",
+			"description": "Runs the complete lifecycle sequentially, chaining ids through collection variables: create an import, verify resubmitting it is idempotent, poll its status, search for the imported property, reserve its offer, then attempt a second reservation to prove the offer's single unit is enforced (409). Run the requests in this folder in order (e.g. via the Collection Runner).",
+			"item": [
+				{
+					"name": "1. Create Import",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const stamp = Date.now().toString();",
+									"pm.collectionVariables.set('external_import_id', 'flow-' + stamp);",
+									"pm.collectionVariables.set('property_code', 'FLOW-' + stamp);",
+									"pm.collectionVariables.set('offer_external_id', 'flow-offer-' + stamp);",
+									"pm.collectionVariables.set('client_reference', 'flow-res-' + stamp);",
+									"pm.collectionVariables.set('client_reference_2', 'flow-res-2-' + stamp);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 202', function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test('Response has id and status', function () {",
+									"    pm.expect(json).to.have.property('id');",
+									"    pm.expect(json).to.have.property('status');",
+									"});",
+									"",
+									"pm.test('Status is pending', function () {",
+									"    pm.expect(json.status).to.eql('pending');",
+									"});",
+									"",
+									"pm.collectionVariables.set('import_id', String(json.id));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supplier\": \"supplier-a\",\n    \"external_import_id\": \"{{external_import_id}}\",\n    \"sent_at\": \"2026-09-06T10:00:00Z\",\n    \"offers\": [\n        {\n            \"external_id\": \"{{offer_external_id}}\",\n            \"property\": {\n                \"code\": \"{{property_code}}\",\n                \"name\": \"Postman Flow Hotel\",\n                \"city\": \"{{property_city}}\"\n            },\n            \"check_in\": \"2026-10-01\",\n            \"check_out\": \"2026-10-05\",\n            \"max_guests\": 2,\n            \"price\": 120.00,\n            \"currency\": \"EUR\",\n            \"available_units\": 1,\n            \"expires_at\": \"2026-12-01T00:00:00Z\"\n        }\n    ]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{base_url}}/api/imports",
+							"host": ["{{base_url}}"],
+							"path": ["api", "imports"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Verify Import Idempotency",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 202', function () {",
+									"    pm.response.to.have.status(202);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test('Returns the same import id as step 1 (idempotent, no new job dispatched)', function () {",
+									"    pm.expect(String(json.id)).to.eql(pm.collectionVariables.get('import_id'));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supplier\": \"supplier-a\",\n    \"external_import_id\": \"{{external_import_id}}\",\n    \"sent_at\": \"2026-09-06T10:00:00Z\",\n    \"offers\": [\n        {\n            \"external_id\": \"{{offer_external_id}}\",\n            \"property\": {\n                \"code\": \"{{property_code}}\",\n                \"name\": \"Postman Flow Hotel\",\n                \"city\": \"{{property_city}}\"\n            },\n            \"check_in\": \"2026-10-01\",\n            \"check_out\": \"2026-10-05\",\n            \"max_guests\": 2,\n            \"price\": 120.00,\n            \"currency\": \"EUR\",\n            \"available_units\": 1,\n            \"expires_at\": \"2026-12-01T00:00:00Z\"\n        }\n    ]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{base_url}}/api/imports",
+							"host": ["{{base_url}}"],
+							"path": ["api", "imports"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Check Import Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test('Returns the import created in step 1', function () {",
+									"    pm.expect(String(json.data.id)).to.eql(pm.collectionVariables.get('import_id'));",
+									"});",
+									"",
+									"pm.test('Status is a known import status', function () {",
+									"    pm.expect(json.data.status).to.be.oneOf(['pending', 'processing', 'completed', 'failed']);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{base_url}}/api/imports/{{import_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "imports", "{{import_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Search Property",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"const match = json.data.find(function (property) {",
+									"    return property.code === pm.collectionVariables.get('property_code');",
+									"});",
+									"",
+									"pm.test('Search results include the imported property (requires the import job to have run — if this fails, run \"php artisan queue:work\" once, or set QUEUE_CONNECTION=sync, against the target environment)', function () {",
+									"    pm.expect(match, 'property not found in search results').to.not.be.undefined;",
+									"});",
+									"",
+									"if (match) {",
+									"    pm.collectionVariables.set('offer_id', String(match.best_offer.id));",
+									"",
+									"    pm.test('Best offer matches the imported offer\\'s price', function () {",
+									"        pm.expect(match.best_offer.price).to.eql('120.00');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{base_url}}/api/properties?city={{property_city}}&check_in=2026-10-01&check_out=2026-10-05&guests=2",
+							"host": ["{{base_url}}"],
+							"path": ["api", "properties"],
+							"query": [
+								{ "key": "city", "value": "{{property_city}}" },
+								{ "key": "check_in", "value": "2026-10-01" },
+								{ "key": "check_out", "value": "2026-10-05" },
+								{ "key": "guests", "value": "2" }
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Reserve Offer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test('Reservation is confirmed', function () {",
+									"    pm.expect(json.data.status).to.eql('confirmed');",
+									"});",
+									"",
+									"pm.test('Reservation references the reserved offer', function () {",
+									"    pm.expect(String(json.data.offer_id)).to.eql(pm.collectionVariables.get('offer_id'));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_reference\": \"{{client_reference}}\",\n    \"customer_name\": \"Postman Flow\",\n    \"customer_email\": \"postman-flow@example.com\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{base_url}}/api/offers/{{offer_id}}/reservations",
+							"host": ["{{base_url}}"],
+							"path": ["api", "offers", "{{offer_id}}", "reservations"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Reserve Offer Again (Expect 409 - No Units Left)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Status code is 409 (the offer only had 1 available unit)', function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"const json = pm.response.json();",
+									"",
+									"pm.test('Response has an error message', function () {",
+									"    pm.expect(json).to.have.property('message');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_reference\": \"{{client_reference_2}}\",\n    \"customer_name\": \"Postman Flow\",\n    \"customer_email\": \"postman-flow@example.com\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{base_url}}/api/offers/{{offer_id}}/reservations",
+							"host": ["{{base_url}}"],
+							"path": ["api", "offers", "{{offer_id}}", "reservations"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
