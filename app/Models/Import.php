@@ -20,6 +20,7 @@ class Import extends Model
     protected $fillable = [
         'supplier_id',
         'external_import_id',
+        'payload',
         'sent_at',
         'status',
         'total_offers',
@@ -36,6 +37,7 @@ class Import extends Model
     protected function casts(): array
     {
         return [
+            'payload' => 'array',
             'sent_at' => 'datetime',
             'total_offers' => 'integer',
             'processed_offers' => 'integer',
