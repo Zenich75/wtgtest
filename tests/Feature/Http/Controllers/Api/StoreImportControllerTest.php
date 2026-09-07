@@ -4,13 +4,13 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Jobs\ProcessImportJob;
 use App\Models\Supplier;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class StoreImportControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * @param  array<string, mixed>  $overrides

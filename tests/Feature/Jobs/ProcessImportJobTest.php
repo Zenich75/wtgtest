@@ -7,12 +7,12 @@ use App\Models\Import;
 use App\Models\Offer;
 use App\Models\Property;
 use App\Models\Supplier;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ProcessImportJobTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * @param  array<string, mixed>  $overrides

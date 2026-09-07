@@ -4,12 +4,12 @@ namespace Tests\Feature\Http\Controllers\Viewer;
 
 use App\Models\Offer;
 use App\Models\Reservation;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IndexReservationControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     public function test_lists_reservations(): void
     {

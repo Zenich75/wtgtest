@@ -5,12 +5,12 @@ namespace Tests\Feature\Http\Controllers\Viewer;
 use App\Models\Offer;
 use App\Models\Property;
 use App\Models\Supplier;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IndexOfferControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     public function test_lists_offers(): void
     {

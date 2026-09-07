@@ -4,12 +4,12 @@ namespace Tests\Feature\Http\Controllers\Viewer;
 
 use App\Models\Offer;
 use App\Models\Property;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IndexPropertyControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     public function test_lists_properties_with_offer_count(): void
     {

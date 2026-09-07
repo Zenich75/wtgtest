@@ -4,12 +4,12 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Offer;
 use App\Models\Reservation;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StoreReservationControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * @param  array<string, mixed>  $overrides

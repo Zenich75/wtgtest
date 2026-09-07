@@ -4,12 +4,12 @@ namespace Tests\Feature\Http\Controllers\Viewer;
 
 use App\Models\Import;
 use App\Models\Supplier;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IndexImportControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     public function test_lists_imports_with_supplier_and_status(): void
     {

@@ -5,12 +5,12 @@ namespace Tests\Feature\Http\Controllers\Api;
 use App\Models\Offer;
 use App\Models\Property;
 use App\Models\Supplier;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IndexPropertyControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     private const CHECK_IN = '2026-10-01';
 

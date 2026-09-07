@@ -4,12 +4,12 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Import;
 use App\Models\Supplier;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ShowImportControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     public function test_returns_import_resource_with_supplier_code_and_status(): void
     {

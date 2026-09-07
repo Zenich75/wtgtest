@@ -91,6 +91,16 @@ For local testing without a worker, set `QUEUE_CONNECTION=sync` in `.env` so job
 
 ## Running Tests
 
+Tests run against their own MySQL database (`laravel_api_test`), configured in `.env.testing` — never against the dev database (`laravel`). Create it once inside the MySQL container:
+
+```bash
+./vendor/bin/sail exec mysql mysql -uroot -p"${DB_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS laravel_api_test; GRANT ALL PRIVILEGES ON laravel_api_test.* TO '${DB_USERNAME}'@'%';"
+```
+
+`RefreshDatabase` migrates this database and wraps each test in a rolled-back transaction, so it stays empty between runs and dev data is never at risk.
+
+Then run the suite:
+
 ```bash
 ./vendor/bin/sail artisan test
 ```
