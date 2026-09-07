@@ -45,4 +45,14 @@ class OfferFactory extends Factory
             'expires_at' => fake()->dateTimeBetween('-3 months', '-1 day'),
         ]);
     }
+
+    /**
+     * Indicate that the offer belongs to a supplier with the given code.
+     */
+    public function forSupplierCode(string $code): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'supplier_id' => Supplier::factory()->withCode($code),
+        ]);
+    }
 }

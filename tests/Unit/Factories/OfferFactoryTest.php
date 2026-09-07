@@ -16,4 +16,11 @@ class OfferFactoryTest extends TestCase
 
         $this->assertTrue($offer->expires_at->isPast());
     }
+
+    public function test_for_supplier_code_state_sets_the_supplier_code(): void
+    {
+        $offer = Offer::factory()->forSupplierCode('supplier-a')->create();
+
+        $this->assertSame('supplier-a', $offer->supplier->code);
+    }
 }
