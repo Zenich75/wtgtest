@@ -23,4 +23,14 @@ class PropertyFactory extends Factory
             'city' => fake()->city(),
         ];
     }
+
+    /**
+     * Indicate that the property is located in the given city.
+     */
+    public function inCity(string $city): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'city' => $city,
+        ]);
+    }
 }
