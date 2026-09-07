@@ -164,3 +164,5 @@ Within `ProcessImportJob`, each offer in the payload is upserted with `Offer::up
 4. If units are available, the count is decremented and the `Reservation` is created; if not, the transaction ends without any writes and the endpoint returns `409 Conflict`.
 
 Because the check-and-decrement happens on a locked row inside one transaction, two simultaneous requests for the last remaining unit are serialized by the database: the first to acquire the lock succeeds and commits its decrement, and the second then sees `available_units = 0` and is correctly rejected — no matter how closely the requests overlap in time.
+
+<!-- ci: verifying pull_request trigger, will be removed -->
