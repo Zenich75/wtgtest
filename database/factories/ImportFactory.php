@@ -31,4 +31,14 @@ class ImportFactory extends Factory
             'completed_at' => null,
         ];
     }
+
+    /**
+     * Indicate that the import failed.
+     */
+    public function failed(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'failed',
+        ]);
+    }
 }
