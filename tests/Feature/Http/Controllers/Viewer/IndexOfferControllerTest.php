@@ -27,16 +27,14 @@ class IndexOfferControllerTest extends TestCase
 
     public function test_filters_by_supplier_code(): void
     {
-        $matching = Supplier::factory()->create(['code' => 'match-sup', 'name' => 'Matching Supplier']);
-        $other = Supplier::factory()->create(['code' => 'other-sup', 'name' => 'Other Supplier']);
-        Offer::factory()->create(['supplier_id' => $matching->id]);
-        Offer::factory()->create(['supplier_id' => $other->id]);
+        $matching = Offer::factory()->forSupplierCode('match-sup')->create();
+        $other = Offer::factory()->forSupplierCode('other-sup')->create();
 
         $response = $this->get('/viewer/offers?supplier=match-sup');
 
         $response->assertOk();
-        $response->assertSee('Matching Supplier');
-        $response->assertDontSee('Other Supplier');
+        $response->assertSee($matching->supplier->name);
+        $response->assertDontSee($other->supplier->name);
     }
 
     public function test_filters_by_city(): void
