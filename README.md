@@ -111,6 +111,10 @@ or directly with PHPUnit:
 ./vendor/bin/sail exec laravel.test vendor/bin/phpunit
 ```
 
+### CI
+
+[`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs the suite on every push and pull request to `master` (and can be triggered manually). It spins up a throwaway MySQL 8.4 service container seeded with the same `laravel_api_test` database/credentials as `.env.testing`, overriding only `DB_HOST`/`DB_PORT` since the service isn't reachable at the `mysql` hostname outside of Sail.
+
 ## API Documentation
 
 - **Swagger / OpenAPI UI**: `{APP_URL}/api/documentation` (e.g. `http://localhost/api/documentation`)
