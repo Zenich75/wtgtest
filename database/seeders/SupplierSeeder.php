@@ -12,13 +12,11 @@ class SupplierSeeder extends Seeder
      */
     public function run(): void
     {
-        Supplier::factory()->create([
-            'code' => 'supplier-a',
+        Supplier::factory()->withCode('supplier-a')->create([
             'name' => 'Supplier A',
         ]);
 
-        Supplier::factory()->create([
-            'code' => 'supplier-b',
+        Supplier::factory()->withCode('supplier-b')->create([
             'name' => 'Supplier B',
         ]);
     }
