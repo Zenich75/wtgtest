@@ -1,6 +1,7 @@
 # WTG Spain API
 
 [![Tests](https://github.com/Zenich75/wtgtest/actions/workflows/tests.yml/badge.svg)](https://github.com/Zenich75/wtgtest/actions/workflows/tests.yml)
+[![Pint](https://github.com/Zenich75/wtgtest/actions/workflows/pint.yml/badge.svg)](https://github.com/Zenich75/wtgtest/actions/workflows/pint.yml)
 
 A Laravel 12 API for ingesting supplier hotel offers, searching property availability, and reserving offer units.
 
@@ -116,6 +117,8 @@ or directly with PHPUnit:
 ### CI
 
 [`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs the suite on every push and pull request to `master` (and can be triggered manually). It spins up a throwaway MySQL 8.4 service container seeded with the same `laravel_api_test` database/credentials as `.env.testing`, overriding only `DB_HOST`/`DB_PORT` since the service isn't reachable at the `mysql` hostname outside of Sail.
+
+[`.github/workflows/pint.yml`](.github/workflows/pint.yml) runs `vendor/bin/pint --test` on the same triggers to check code style without modifying files.
 
 ## API Documentation
 
