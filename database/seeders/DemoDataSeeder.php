@@ -20,7 +20,9 @@ class DemoDataSeeder extends Seeder
      */
     public function run(): void
     {
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::all()->push(
+            Supplier::factory()->withCode('demo-supplier')->create(['name' => 'Demo Supplier'])
+        );
 
         Import::factory()
             ->count(6)
