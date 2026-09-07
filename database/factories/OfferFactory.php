@@ -35,4 +35,14 @@ class OfferFactory extends Factory
             'expires_at' => fake()->dateTimeBetween('now', '+3 months'),
         ];
     }
+
+    /**
+     * Indicate that the offer has expired.
+     */
+    public function expired(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'expires_at' => fake()->dateTimeBetween('-3 months', '-1 day'),
+        ]);
+    }
 }
