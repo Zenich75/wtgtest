@@ -20,6 +20,11 @@ class IndexReservationControllerTest extends TestCase
             'customer_name' => 'Jane Doe',
             'status' => 'confirmed',
         ]);
+        Reservation::factory()->cancelled()->create([
+            'offer_id' => $offer->id,
+            'client_reference' => 'ref-456',
+            'customer_name' => 'John Smith',
+        ]);
 
         $response = $this->get('/viewer/reservations');
 
@@ -27,5 +32,8 @@ class IndexReservationControllerTest extends TestCase
         $response->assertSee('ref-123');
         $response->assertSee('Jane Doe');
         $response->assertSee('confirmed');
+        $response->assertSee('ref-456');
+        $response->assertSee('John Smith');
+        $response->assertSee('cancelled');
     }
 }
