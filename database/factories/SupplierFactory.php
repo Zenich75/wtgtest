@@ -22,4 +22,14 @@ class SupplierFactory extends Factory
             'name' => fake()->company(),
         ];
     }
+
+    /**
+     * Indicate that the supplier has the given code.
+     */
+    public function withCode(string $code): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'code' => $code,
+        ]);
+    }
 }
