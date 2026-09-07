@@ -113,6 +113,17 @@ Regenerate the docs after changing any `#[OA\...]` annotations:
 ./vendor/bin/sail artisan l5-swagger:generate
 ```
 
+## Data Browser
+
+A read-only, server-rendered Blade interface for internal review of the underlying data — not part of the public API and has no authentication, so it should not be exposed outside a trusted environment.
+
+- `GET /viewer/imports` — imports list (supplier, status badge, offer counts, timestamps), paginated, newest first.
+- `GET /viewer/properties` — properties list with a count of offers per property, paginated.
+- `GET /viewer/offers` — offers list, paginated, filterable via `?supplier=<code>&city=<city>` query params.
+- `GET /viewer/reservations` — reservations list with status badges, paginated.
+
+A "Browse data" link on the homepage (`/`) points into this section.
+
 ## Design Notes
 
 ### Import Idempotency
