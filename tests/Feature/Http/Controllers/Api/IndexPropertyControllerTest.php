@@ -47,8 +47,8 @@ class IndexPropertyControllerTest extends TestCase
     public function test_selects_cheapest_offer_when_property_has_multiple_matching_offers(): void
     {
         $property = Property::factory()->create(['code' => 'P1']);
-        $cheapSupplier = Supplier::factory()->create(['code' => 'cheap-supplier']);
-        $expensiveSupplier = Supplier::factory()->create(['code' => 'expensive-supplier']);
+        $cheapSupplier = Supplier::factory()->withCode('cheap-supplier')->create();
+        $expensiveSupplier = Supplier::factory()->withCode('expensive-supplier')->create();
 
         Offer::factory()->create($this->matchingOfferAttributes([
             'property_id' => $property->id,
