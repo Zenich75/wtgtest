@@ -36,7 +36,13 @@ class DemoDataSeeder extends Seeder
             ->create();
 
         Reservation::factory()
-            ->count(10)
+            ->count(7)
+            ->recycle($offers)
+            ->create();
+
+        Reservation::factory()
+            ->cancelled()
+            ->count(3)
             ->recycle($offers)
             ->create();
     }

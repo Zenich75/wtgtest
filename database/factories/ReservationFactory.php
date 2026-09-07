@@ -26,4 +26,14 @@ class ReservationFactory extends Factory
             'status' => fake()->randomElement(['pending', 'confirmed', 'cancelled']),
         ];
     }
+
+    /**
+     * Indicate that the reservation is cancelled.
+     */
+    public function cancelled(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'cancelled',
+        ]);
+    }
 }
