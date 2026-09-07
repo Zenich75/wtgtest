@@ -1,5 +1,7 @@
 # WTG Spain API
 
+[![Tests](https://github.com/Zenich75/wtgtest/actions/workflows/tests.yml/badge.svg)](https://github.com/Zenich75/wtgtest/actions/workflows/tests.yml)
+
 A Laravel 12 API for ingesting supplier hotel offers, searching property availability, and reserving offer units.
 
 ## Overview
