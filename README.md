@@ -65,7 +65,7 @@ Run migrations:
 ./vendor/bin/sail artisan migrate
 ```
 
-Seed reference data — this creates the two suppliers (`supplier-a`, `supplier-b`) that imports validate against:
+Seed reference and demo data — this creates the two suppliers (`supplier-a`, `supplier-b`) that imports validate against, plus demo properties, offers, imports, and reservations so the [data browser](#data-browser) has something to show:
 
 ```bash
 ./vendor/bin/sail artisan db:seed
