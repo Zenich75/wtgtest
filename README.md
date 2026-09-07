@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/Zenich75/wtgtest/actions/workflows/tests.yml/badge.svg)](https://github.com/Zenich75/wtgtest/actions/workflows/tests.yml)
 [![Pint](https://github.com/Zenich75/wtgtest/actions/workflows/pint.yml/badge.svg)](https://github.com/Zenich75/wtgtest/actions/workflows/pint.yml)
+[![codecov](https://codecov.io/gh/Zenich75/wtgtest/branch/master/graph/badge.svg)](https://codecov.io/gh/Zenich75/wtgtest)
 
 A Laravel 12 API for ingesting supplier hotel offers, searching property availability, and reserving offer units.
 
@@ -116,7 +117,9 @@ or directly with PHPUnit:
 
 ### CI
 
-[`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs the suite on every push and pull request to `master` (and can be triggered manually). It spins up a throwaway MySQL 8.4 service container seeded with the same `laravel_api_test` database/credentials as `.env.testing`, overriding only `DB_HOST`/`DB_PORT` since the service isn't reachable at the `mysql` hostname outside of Sail.
+[`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs the suite on every push and pull request to `master` (and can be triggered manually). It spins up a throwaway MySQL 8.4 service container seeded with the same `laravel_api_test` database/credentials as `.env.testing`, overriding only `DB_HOST`/`DB_PORT` since the service isn't reachable at the `mysql` hostname outside of Sail. It also collects coverage (via `pcov`) and uploads it to [Codecov](https://codecov.io/gh/Zenich75/wtgtest).
+
+> The Codecov badge only populates once the repo is enabled at [codecov.io](https://codecov.io) (sign in with GitHub, add the repo) and, for reliable uploads, a `CODECOV_TOKEN` repo secret is set from the token shown there.
 
 [`.github/workflows/pint.yml`](.github/workflows/pint.yml) runs `vendor/bin/pint --test` on the same triggers to check code style without modifying files.
 
